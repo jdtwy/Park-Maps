@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">ParkTech App</string>
+
+    <!-- activity_main -->
+    <string name="inputSearchBar">Search here</string>
+    <string name="btnAddPark">+</string>
+    <string name="btnGoProfile">🙂</string>
 </resources>
