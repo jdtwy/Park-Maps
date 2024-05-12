@@ -7,6 +7,9 @@
     <string name="inputSearchBar">Search here</string>
     <string name="btnAddPark">+</string>
     <string name="btnGoProfile">🙂</string>
+    <string name="textReviews">Reviews</string>
+    <string name="btnGoReviews">See more…</string>
+    <string name="btnGoInfo">More info…</string>
 
     <!-- activity_add_park -->
     <string name="inputParkName">Park Name</string>
@@ -15,5 +18,4 @@
     <string name="inputLong">Longitude</string>
     <string name="inputLat">Latitude</string>
     <string name="btnCreatePark">✓</string>
-
 </resources>
