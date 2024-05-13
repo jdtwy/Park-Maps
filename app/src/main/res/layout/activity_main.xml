@@ -29,7 +29,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="3"
                 android:orientation="vertical"
-                android:visibility="gone"> <!--SET THIS TO GONE WHEN DONE CONFIGURING-->
+                android:visibility="visible"> <!--SET THIS TO GONE WHEN DONE CONFIGURING-->
                 <!--Make something turn visibility from 'gone' to 'visible'-->
 
                 <LinearLayout
@@ -40,13 +40,13 @@
 
                     <View
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="8"
+                        android:layout_weight="9"
                         android:orientation="vertical">
 
                         <TextView
@@ -69,14 +69,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="10">
-
                         </FrameLayout>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="8"
+                        android:layout_weight="9"
                         android:orientation="vertical">
 
                         <TextView
@@ -87,26 +86,16 @@
                             android:text="@string/textReviews"
                             android:textStyle="bold" />
 
-                        <FrameLayout
-                            android:id="@+id/reviewPlaceholder1"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="5">
-
-                        </FrameLayout>
-
-                        <FrameLayout
-                            android:id="@+id/reviewPlaceholder2"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="5">
-
-                        </FrameLayout>
+                        <!--Should be clickable-->
+                        <!--Each should be changed to visible if it has review info-->
+                        <include layout="@layout/linear_layout_review" />
+                        <include layout="@layout/linear_layout_review" />
+                        <include layout="@layout/linear_layout_review" />
                     </LinearLayout>
 
                     <View
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
                 </LinearLayout>
 
@@ -118,7 +107,7 @@
 
                     <View
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <!--Should take user to PoI Info Activity with Info selected-->
@@ -131,7 +120,7 @@
 
                     <View
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="2" />
 
                     <!--Should take user to PoI Info Activity with Reviews selected-->
@@ -144,11 +133,10 @@
 
                     <View
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
                 </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout
@@ -216,9 +204,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="70" />
-
         </LinearLayout>
-
     </FrameLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

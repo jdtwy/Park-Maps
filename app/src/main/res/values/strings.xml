@@ -10,6 +10,7 @@
     <string name="textReviews">Reviews</string>
     <string name="btnGoReviews">See more…</string>
     <string name="btnGoInfo">More info…</string>
+    <string name="imgProfilePic">Profile picture</string>
 
     <!-- activity_add_park -->
     <string name="inputParkName">Park Name</string>
