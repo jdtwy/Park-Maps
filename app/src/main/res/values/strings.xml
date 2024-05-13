@@ -1,10 +1,10 @@
 <resources>
     <!-- all activities -->
     <string name="app_name">ParkTech App</string>
-    <string name="btnGoBack">⬅️</string>
+    <string name="btnGoBackMap">⬅️</string>
+    <string name="inputGoSearch">Search here</string>
 
     <!-- activity_main -->
-    <string name="inputSearchBar">Search here</string>
     <string name="btnAddPark">+</string>
     <string name="btnGoProfile">🙂</string>
     <string name="textReviews">Reviews</string>
@@ -18,4 +18,5 @@
     <string name="inputLong">Longitude</string>
     <string name="inputLat">Latitude</string>
     <string name="btnCreatePark">✓</string>
+    <string name="btnClearText">ⓧ</string>
 </resources>

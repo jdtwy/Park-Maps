@@ -15,38 +15,37 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2" />
+            android:layout_weight="1" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4"
+            android:layout_weight="10"
             android:orientation="horizontal">
 
             <View
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/btnGoBack"
+                android:id="@+id/btnGoBackMap"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="@string/btnGoBack" />
+                android:text="@string/btnGoBackMap" />
 
             <View
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="16" />
+                android:layout_height="wrap_content"
+                android:layout_weight="13" />
 
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="60"
+            android:layout_weight="70"
             android:orientation="horizontal">
 
             <View
@@ -63,7 +62,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="3" />
+                    android:layout_weight="2" />
 
                 <TextView
                     android:id="@+id/textAddPark"
@@ -84,7 +83,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
-                    android:ems="10"
                     android:hint="@string/inputParkName"
                     android:autofillHints="none"
                     android:inputType="text" />
@@ -128,7 +126,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
-                    android:ems="10"
                     android:hint="@string/inputLat"
                     android:autofillHints="none"
                     android:inputType="text" />
@@ -143,7 +140,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
-                    android:ems="10"
                     android:hint="@string/inputLong"
                     android:autofillHints="none"
                     android:inputType="text" />

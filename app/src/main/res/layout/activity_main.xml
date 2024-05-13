@@ -55,7 +55,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:text="Placeholder Park"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/textRating"
@@ -164,12 +164,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="80"
+                android:layout_weight="10"
                 android:orientation="horizontal">
 
                 <View
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1" />
 
                 <Button
@@ -181,22 +181,22 @@
 
                 <View
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1" />
 
+                <!--Takes user to Search activity on press-->
                 <EditText
-                    android:id="@+id/inputSearchBar"
+                    android:id="@+id/inputGoSearch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="8"
                     android:autofillHints="none"
-                    android:ems="10"
-                    android:hint="@string/inputSearchBar"
+                    android:hint="@string/inputGoSearch"
                     android:inputType="text" />
 
                 <View
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1" />
 
                 <Button
@@ -208,9 +208,14 @@
 
                 <View
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1" />
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="70" />
 
         </LinearLayout>
 
