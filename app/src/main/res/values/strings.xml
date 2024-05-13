@@ -19,4 +19,5 @@
     <string name="inputLat">Latitude</string>
     <string name="btnCreatePark">✓</string>
     <string name="btnClearText">ⓧ</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
