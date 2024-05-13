@@ -21,7 +21,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="4">
-
             </FrameLayout>
 
             <LinearLayout
@@ -46,14 +45,14 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="9"
+                        android:layout_weight="13"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/textParkName"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_weight="2"
                             android:text="Placeholder Park"
                             android:textStyle="bold" />
 
@@ -61,36 +60,70 @@
                             android:id="@+id/textRating"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_weight="2"
                             android:text="3.4 ★★★☆☆" />
 
-                        <FrameLayout
-                            android:id="@+id/featuresPlaceholder"
+                        <View
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="10">
-                        </FrameLayout>
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="2"
+                            android:text="Features" />
+
+                        <LinearLayout
+                            android:id="@+id/layoutTopFeatures"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="15"
+                            android:orientation="vertical">
+
+                            <include layout="@layout/linear_layout_feature" />
+                            <include layout="@layout/linear_layout_feature" />
+                            <include layout="@layout/linear_layout_feature" />
+                            <include layout="@layout/linear_layout_feature" />
+                            <include layout="@layout/linear_layout_feature" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="2" />
+                        </LinearLayout>
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="9"
+                        android:layout_weight="13"
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/textReviews"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:text="@string/textReviews"
                             android:textStyle="bold" />
 
-                        <!--Should be clickable-->
-                        <!--Each should be changed to visible if it has review info-->
-                        <include layout="@layout/linear_layout_review" />
-                        <include layout="@layout/linear_layout_review" />
-                        <include layout="@layout/linear_layout_review" />
+                        <LinearLayout
+                            android:id="@+id/layoutReviews"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="9"
+                            android:orientation="vertical">
+
+                            <!--Should be clickable-->
+                            <!--Each should be changed to visible if it has review info-->
+                            <include layout="@layout/linear_layout_review" />
+                            <include layout="@layout/linear_layout_review" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <View
