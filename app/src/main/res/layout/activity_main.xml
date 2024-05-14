@@ -112,6 +112,10 @@
                             android:text="@string/textReviews"
                             android:textStyle="bold" />
 
+                        <!--Each should be changed to visible if it has review info-->
+                        <!--If review greater than 70 characters, add ellipsis to end of string
+                        This should be defined somewhere in the code for activity_main.xml when
+                        sending a review to the review preview-->
                         <LinearLayout
                             android:id="@+id/layoutReviews"
                             android:layout_width="match_parent"
@@ -119,8 +123,6 @@
                             android:layout_weight="9"
                             android:orientation="vertical">
 
-                            <!--Should be clickable-->
-                            <!--Each should be changed to visible if it has review info-->
                             <include layout="@layout/linear_layout_review" />
                             <include layout="@layout/linear_layout_review" />
                         </LinearLayout>

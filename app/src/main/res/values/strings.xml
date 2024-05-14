@@ -26,4 +26,6 @@
     <string name="textSearchRecent">Recent</string>
     <string name="textSearchLocations">Locations</string>
     <string name="textPinIcon">📍</string>
+    <string name="btnOpenInfo">Info</string>
+    <string name="btnOpenReviews">Reviews</string>
 </resources>

@@ -6,7 +6,7 @@
     android:layout_height="0dp"
     android:layout_weight="4"
     android:orientation="vertical"
-    android:visibility="visible">
+    android:visibility="invisible"> <!--SET TO INVISIBLE WHEN DONE CONFIGURING-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imgProfilePic"
+                android:id="@+id/imgReviewProfilePic"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
@@ -34,7 +34,7 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/textUsername"
+                android:id="@+id/textReviewUsername"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="10"
@@ -49,7 +49,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textRating"
+                android:id="@+id/textReviewRating"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -58,7 +58,7 @@
                 android:gravity="right|bottom" />
 
             <TextView
-                android:id="@+id/textSymbols"
+                android:id="@+id/textReviewSymbols"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -72,13 +72,12 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!--If review greater than 70 characters, add ellipsis to end of string-->
     <TextView
         android:id="@+id/textReview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="20"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmo..." />
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." />
 
     <View
         android:layout_width="match_parent"
