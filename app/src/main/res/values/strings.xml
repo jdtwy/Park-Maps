@@ -36,6 +36,7 @@
     <!-- activity_park_info -->
     <string name="btnShowInfo">Info</string>
     <string name="btnShowReviews">Reviews</string>
+    <string name="btnGoAddReview">+</string>
 
     <!-- activity_add_review -->
     <string name="inputReviewScore">e.g 3.14</string>

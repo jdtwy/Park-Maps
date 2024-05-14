@@ -223,12 +223,14 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
 
+                <!--User profiles not implemented, so this is a placeholder-->
                 <Button
                     android:id="@+id/btnGoProfile"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="@string/btnGoProfile" />
+                    android:text="@string/btnGoProfile"
+                    android:visibility="invisible" />
 
                 <View
                     android:layout_width="0dp"
