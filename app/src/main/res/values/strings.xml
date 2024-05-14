@@ -1,8 +1,15 @@
 <resources>
-    <!-- all activities -->
+    <!-- shared -->
     <string name="app_name">ParkTech App</string>
     <string name="btnGoBackMap">⬅️</string>
     <string name="inputGoSearch">Search here</string>
+    <string name="textReviewRatingPlaceholder">3.4 ★★★☆☆</string>
+    <string name="textParkCoordsPlaceholder">-37.818078, 144.96681</string>
+    <string name="textFeatures">Features</string>
+    <string name="textParkNamePlaceholder">Placeholder Park</string>
+
+    <!-- actiivty_maps -->
+    <string name="title_activity_maps">MapsActivity</string> <!--Update this to follow convention-->
 
     <!-- activity_main -->
     <string name="btnAddPark">+</string>
@@ -10,6 +17,7 @@
     <string name="textReviews">Reviews</string>
     <string name="btnGoReviews">See more…</string>
     <string name="btnGoInfo">More info…</string>
+    <string name="imgProfilePic">Profile picture</string>
 
     <!-- activity_add_park -->
     <string name="inputParkName">Park Name</string>
@@ -19,10 +27,23 @@
     <string name="inputLat">Latitude</string>
     <string name="btnCreatePark">✓</string>
     <string name="btnClearText">ⓧ</string>
-    <string name="title_activity_maps">MapsActivity</string> <!--Update this to follow convention-->
 
     <!-- activity_search -->
     <string name="textSearchRecent">Recent</string>
     <string name="textSearchLocations">Locations</string>
     <string name="textPinIcon">📍</string>
+
+    <!-- activity_park_info -->
+    <string name="btnShowInfo">Info</string>
+    <string name="btnShowReviews">Reviews</string>
+
+    <!-- linear_layout_review -->
+    <string name="textReviewUsernamePlaceholder">Name</string>
+    <string name="textReviewFeatureIconsPlaceholder">🍖🥅🚽🦮</string>
+    <string name="textReviewPlaceholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</string>
+
+    <!-- linear_layout_features -->
+    <string name="textFeatureIconPlaceholder">🦮</string>
+    <string name="textFeatureDescriptionPlaceholder">Description</string>
+    <string name="textFeatureCountPlaceholder">16</string>
 </resources>

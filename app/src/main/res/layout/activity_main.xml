@@ -21,7 +21,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="4">
-
             </FrameLayout>
 
             <LinearLayout
@@ -29,7 +28,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="3"
                 android:orientation="vertical"
-                android:visibility="gone"> <!--SET THIS TO GONE WHEN DONE CONFIGURING-->
+                android:visibility="visible"> <!--SET THIS TO GONE WHEN DONE CONFIGURING-->
                 <!--Make something turn visibility from 'gone' to 'visible'-->
 
                 <LinearLayout
@@ -40,73 +39,99 @@
 
                     <View
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="8"
+                        android:layout_weight="13"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/textParkName"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:text="Placeholder Park"
+                            android:layout_weight="2"
+                            android:text="@string/textParkNamePlaceholder"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/textRating"
+                            android:id="@+id/textAverageReviewRating"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:text="3.4 ★★★☆☆" />
+                            android:layout_weight="2"
+                            android:text="@string/textReviewRatingPlaceholder" />
 
-                        <FrameLayout
-                            android:id="@+id/featuresPlaceholder"
+                        <View
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="10">
+                            android:layout_weight="1" />
 
-                        </FrameLayout>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="2"
+                            android:text="@string/textFeatures" />
+
+                        <!--Each should be changed to visible if it has review info-->
+                        <LinearLayout
+                            android:id="@+id/layoutTopFeatures"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="15"
+                            android:orientation="vertical">
+
+                            <include layout="@layout/linear_layout_feature" />
+                            <include layout="@layout/linear_layout_feature" />
+                            <include layout="@layout/linear_layout_feature" />
+                            <include layout="@layout/linear_layout_feature" />
+                            <include layout="@layout/linear_layout_feature" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="2" />
+                        </LinearLayout>
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="8"
+                        android:layout_weight="13"
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/textReviews"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:text="@string/textReviews"
                             android:textStyle="bold" />
 
-                        <FrameLayout
-                            android:id="@+id/reviewPlaceholder1"
+                        <!--Each should be changed to visible if it has review info-->
+                        <!--If review greater than 70 characters, add ellipsis to end of string
+                        This should be defined somewhere in the code for activity_main.xml when
+                        sending a review to the review preview-->
+                        <LinearLayout
+                            android:id="@+id/layoutReviews"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="5">
+                            android:layout_weight="9"
+                            android:orientation="vertical">
 
-                        </FrameLayout>
-
-                        <FrameLayout
-                            android:id="@+id/reviewPlaceholder2"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="5">
-
-                        </FrameLayout>
+                            <include layout="@layout/linear_layout_review" />
+                            <include layout="@layout/linear_layout_review" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <View
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
                 </LinearLayout>
 
@@ -118,7 +143,7 @@
 
                     <View
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <!--Should take user to PoI Info Activity with Info selected-->
@@ -131,7 +156,7 @@
 
                     <View
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="2" />
 
                     <!--Should take user to PoI Info Activity with Reviews selected-->
@@ -144,11 +169,10 @@
 
                     <View
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
                 </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout
@@ -216,9 +240,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="70" />
-
         </LinearLayout>
-
     </FrameLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

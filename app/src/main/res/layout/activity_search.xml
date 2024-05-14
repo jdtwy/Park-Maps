@@ -7,150 +7,145 @@
     android:layout_height="match_parent"
     tools:context=".Search">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:layout_weight="10"
+            android:orientation="horizontal">
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnGoBackMap"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/btnGoBackMap" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <!--Activity will start focused on this-->
+            <EditText
+                android:id="@+id/inputSearchBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:autofillHints="none"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="@string/inputGoSearch"
+                android:inputType="text" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnClearText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/btnClearText" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="70"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="10"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <Button
-                    android:id="@+id/btnGoBackMap"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="@string/btnGoBackMap" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <!--Activity will start focused on this-->
-                <EditText
-                    android:id="@+id/inputSearchBar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="8"
-                    android:autofillHints="none"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:hint="@string/inputGoSearch"
-                    android:inputType="text" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <Button
-                    android:id="@+id/btnClearText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="@string/btnClearText" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="70"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="16"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="16"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
-
-                        <TextView
-                            android:id="@+id/textSearchState"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="20"
-                            android:text="@string/textSearchRecent" />
-                    </LinearLayout>
-
-                    <!--Set 'text' field to '@string/textSearchLocations' when text is entered into "@+id/inputSearchBar"-->
-
-                    <!--For the functionality to work, we can findViewById of linearLayout, then
-                    form a for loop with linearLayout.getChildCount as the max index, then
-                    linLayText = linearLayout.getChildAt(i)
-
-                        parkName = db.getItem(i).getValue(0)
-                        parkCoords = db.getItem(i).getValue(0)
-
-                        linLayText.getChildAt(0).setText(parkName)
-                        linLayText.getChildAt(1).setText(parkCoords)-->
-                    <LinearLayout
-                        android:id="@+id/layoutAllLocations"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="30"
-                        android:orientation="vertical">
-
-                        <!--Should be clickable-->
-                        <!--Each should be changed to visible if it has location info-->
-                        <include layout="@layout/location_linear_layout" />
-                        <include layout="@layout/location_linear_layout" />
-                        <include layout="@layout/location_linear_layout" />
-                        <include layout="@layout/location_linear_layout" />
-                        <include layout="@layout/location_linear_layout" />
-                        <include layout="@layout/location_linear_layout" />
-                        <include layout="@layout/location_linear_layout" />
-                        <include layout="@layout/location_linear_layout" />
-                    </LinearLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
                     <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="2" />
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/textSearchState"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="20"
+                        android:text="@string/textSearchRecent" />
+                </LinearLayout>
+
+                <!--Set 'text' field to '@string/textSearchLocations' when text is entered into "@+id/inputSearchBar"-->
+
+                <!--For the functionality to work, we can findViewById of linearLayout, then
+                form a for loop with linearLayout.getChildCount as the max index, then
+                linLayText = linearLayout.getChildAt(i)
+
+                    parkName = db.getItem(i).getValue(0)
+                    parkCoords = db.getItem(i).getValue(0)
+
+                    linLayText.getChildAt(0).setText(parkName)
+                    linLayText.getChildAt(1).setText(parkCoords)-->
+                <LinearLayout
+                    android:id="@+id/layoutAllLocations"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="30"
+                    android:orientation="vertical">
+
+                    <!--Should be clickable-->
+                    <!--Each should be changed to visible if it has location info-->
+                    <include layout="@layout/linear_layout_location" />
+                    <include layout="@layout/linear_layout_location" />
+                    <include layout="@layout/linear_layout_location" />
+                    <include layout="@layout/linear_layout_location" />
+                    <include layout="@layout/linear_layout_location" />
+                    <include layout="@layout/linear_layout_location" />
+                    <include layout="@layout/linear_layout_location" />
+                    <include layout="@layout/linear_layout_location" />
                 </LinearLayout>
 
                 <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2" />
             </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
         </LinearLayout>
-    </FrameLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
