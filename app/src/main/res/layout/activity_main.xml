@@ -53,15 +53,15 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="2"
-                            android:text="Placeholder Park"
+                            android:text="@string/textParkNamePlaceholder"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/textRating"
+                            android:id="@+id/textAverageReviewRating"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="2"
-                            android:text="3.4 ★★★☆☆" />
+                            android:text="@string/textReviewRatingPlaceholder" />
 
                         <View
                             android:layout_width="match_parent"
@@ -72,8 +72,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="2"
-                            android:text="Features" />
+                            android:text="@string/textFeatures" />
 
+                        <!--Each should be changed to visible if it has review info-->
                         <LinearLayout
                             android:id="@+id/layoutTopFeatures"
                             android:layout_width="match_parent"
