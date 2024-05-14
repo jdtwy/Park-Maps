@@ -37,13 +37,29 @@
     <string name="btnShowInfo">Info</string>
     <string name="btnShowReviews">Reviews</string>
 
+    <!-- activity_add_review -->
+    <string name="inputReviewScore">e.g 3.14</string>
+    <string name="inputReviewText">Type review here</string>
+    <string name="checkBoxPets">🦮</string>
+    <string name="checkBoxBBQ">🍖</string>
+    <string name="checkBoxBasketball">🏀</string>
+    <string name="checkBoxSoccer">⚽</string>
+    <string name="checkBoxToilets">🚾</string>
+    <string name="checkBoxGym">💪</string>
+    <string name="checkBoxWildlife">🦆</string>
+    <string name="checkBoxDrinkingWater">🚰</string>
+    <string name="checkBoxParking">🚗</string>
+    <string name="checkBoxFireplace">🔥</string>
+
     <!-- linear_layout_review -->
     <string name="textReviewUsernamePlaceholder">Name</string>
-    <string name="textReviewFeatureIconsPlaceholder">🍖🥅🚽🦮</string>
+    <string name="textReviewFeatureIconsPlaceholder">🍖🥅🚾🦮</string>
     <string name="textReviewPlaceholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</string>
 
     <!-- linear_layout_features -->
     <string name="textFeatureIconPlaceholder">🦮</string>
     <string name="textFeatureDescriptionPlaceholder">Description</string>
     <string name="textFeatureCountPlaceholder">16</string>
+    <string name="textAddReviewTitle">Review</string>
+
 </resources>

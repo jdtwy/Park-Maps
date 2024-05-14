@@ -128,7 +128,7 @@
                     android:layout_weight="2"
                     android:hint="@string/inputLat"
                     android:autofillHints="none"
-                    android:inputType="text" />
+                    android:inputType="numberDecimal|numberSigned" />
 
                 <View
                     android:layout_width="match_parent"
@@ -142,7 +142,7 @@
                     android:layout_weight="2"
                     android:hint="@string/inputLong"
                     android:autofillHints="none"
-                    android:inputType="text" />
+                    android:inputType="numberDecimal|numberSigned" />
 
                 <View
                     android:layout_width="match_parent"
