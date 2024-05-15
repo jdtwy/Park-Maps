@@ -2,6 +2,7 @@
 buildscript {
     dependencies {
         classpath libs.google.secrets.gradle.plugin
+        classpath libs.google.services
     }
 }
 

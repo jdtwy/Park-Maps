@@ -7,13 +7,15 @@
     <string name="textParkCoordsPlaceholder">-37.818078, 144.96681</string>
     <string name="textFeatures">Features</string>
     <string name="textParkNamePlaceholder">Placeholder Park</string>
+    <string name="inputEmail">Email</string>
+    <string name="inputPassword">Password</string>
 
     <!-- actiivty_maps -->
     <string name="title_activity_maps">MapsActivity</string> <!--Update this to follow convention-->
 
     <!-- activity_main -->
     <string name="btnAddPark">+</string>
-    <string name="btnGoProfile">🙂</string>
+    <string name="btnGoAuth">🙂</string>
     <string name="textReviews">Reviews</string>
     <string name="btnGoReviews">See more…</string>
     <string name="btnGoInfo">More info…</string>
@@ -52,6 +54,18 @@
     <string name="checkBoxParking">🚗</string>
     <string name="checkBoxFireplace">🔥</string>
 
+    <!-- activity_register -->
+    <string name="textAddReviewTitle">Review</string>
+    <string name="textCreateAccount">Create account</string>
+    <string name="inputUsername">Username</string>
+    <string name="btnCreateUser">Create account</string>
+    <string name="btnGoLogin">Already registered?</string>
+
+    <!-- activity_login -->
+    <string name="textLogin">Login</string>
+    <string name="btnLoginUser">Login</string>
+    <string name="btnGoRegister">Not registered?</string>
+
     <!-- linear_layout_review -->
     <string name="textReviewUsernamePlaceholder">Name</string>
     <string name="textReviewFeatureIconsPlaceholder">🍖🥅🚾🦮</string>
@@ -61,6 +75,6 @@
     <string name="textFeatureIconPlaceholder">🦮</string>
     <string name="textFeatureDescriptionPlaceholder">Description</string>
     <string name="textFeatureCountPlaceholder">16</string>
-    <string name="textAddReviewTitle">Review</string>
+
 
 </resources>
