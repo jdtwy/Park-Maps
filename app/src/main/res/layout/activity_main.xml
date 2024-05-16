@@ -196,11 +196,11 @@
                     android:layout_weight="1" />
 
                 <Button
-                    android:id="@+id/btnAddPark"
+                    android:id="@+id/btnGoAddPark"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="@string/btnAddPark" />
+                    android:text="@string/btnGoAddPark" />
 
                 <View
                     android:layout_width="0dp"
@@ -215,7 +215,8 @@
                     android:layout_weight="8"
                     android:autofillHints="none"
                     android:hint="@string/inputGoSearch"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:background="#FFFFFF" />
 
                 <View
                     android:layout_width="0dp"

@@ -14,7 +14,7 @@
     <string name="title_activity_maps">MapsActivity</string> <!--Update this to follow convention-->
 
     <!-- activity_main -->
-    <string name="btnAddPark">+</string>
+    <string name="btnGoAddPark">+</string>
     <string name="btnGoAuth">🙂</string>
     <string name="textReviews">Reviews</string>
     <string name="btnGoReviews">See more…</string>

@@ -18,7 +18,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
     FirebaseAuth mAuth;
@@ -27,6 +26,7 @@ public class Login extends AppCompatActivity {
     EditText inputPasswordView;
     Button btnLoginUser;
     Button btnGoRegister;
+    Button btnGoBackMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,7 @@ public class Login extends AppCompatActivity {
         inputPasswordView = findViewById(R.id.inputPassword);
         btnLoginUser = findViewById(R.id.btnLoginUser);
         btnGoRegister = findViewById(R.id.btnGoRegister);
+        btnGoBackMap = findViewById(R.id.btnGoBackMap);
 
         btnLoginUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +79,14 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 // Take user to Login
                 startActivity(new Intent(getApplicationContext(), Register.class));
+            }
+        });
+
+        btnGoBackMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Take user to MainActivity
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
     }
