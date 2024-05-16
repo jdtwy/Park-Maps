@@ -1,13 +1,17 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -38,6 +42,12 @@ public class MainActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
+        if (savedInstanceState == null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.map_container, new MapsActivity());
+            fragmentTransaction.commit();
+        }
     }
 
 
