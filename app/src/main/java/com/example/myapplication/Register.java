@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,17 +29,21 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Register extends AppCompatActivity {
     FirebaseAuth mAuth;
+    FirebaseFirestore db;
 
     EditText inputEmailView;
     EditText inputUsernameView;
     EditText inputPasswordView;
     Button btnCreateUser;
     Button btnGoLogin;
+
+    String Tag = "CustomDebug";
 
 
     @Override
@@ -53,6 +58,7 @@ public class Register extends AppCompatActivity {
         });
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         inputEmailView = findViewById(R.id.inputEmail);
         inputUsernameView = findViewById(R.id.inputUsername);
@@ -78,7 +84,6 @@ public class Register extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(Register.this, "Account created.", Toast.LENGTH_SHORT).show();
                                         FirebaseUser user = mAuth.getCurrentUser();
 
                                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -89,7 +94,26 @@ public class Register extends AppCompatActivity {
                                                 .addOnCompleteListener(profileTask -> {
                                                     if (profileTask.isSuccessful()) {
                                                         // Username added
-                                                        Toast.makeText(Register.this, "Sign Up Successful", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(Register.this, "Account created.", Toast.LENGTH_SHORT).show();
+
+                                                        String uid = user.getUid();
+                                                        String username = user.getDisplayName();
+                                                        Date dateCreated = new Date(user.getMetadata().getCreationTimestamp());
+
+                                                        Map<String, Object> userDocument = new HashMap<>();
+
+                                                        userDocument.put("uid", uid);
+                                                        userDocument.put("username", username);
+                                                        userDocument.put("dateCreated", dateCreated.toString());
+                                                        userDocument.put("parksAdded", new ArrayList<>()); // collection of park hashes
+                                                        userDocument.put("reviewsAdded", new ArrayList<>()); // collection of review hashes
+                                                        userDocument.put("profilePic", null);
+
+                                                        Log.d(Tag, "uid: " + uid + " username: " + username + " dateCreated: " + dateCreated);
+                                                        Log.d(Tag, "userDocument: " + userDocument);
+
+                                                        db.collection("users").add(userDocument);
+
                                                         // Take user to MainActivity
                                                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                                     } else {
@@ -99,7 +123,7 @@ public class Register extends AppCompatActivity {
                                                 });
                                     } else {
                                         // If sign in fails, display a message to the user.
-                                        Toast.makeText(Register.this, "Account failed to create.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(Register.this, "Email already in use.", Toast.LENGTH_SHORT).show();
                                         Log.w("log", "createUserWithEmail:failure", task.getException());
                                     }
                                 }
