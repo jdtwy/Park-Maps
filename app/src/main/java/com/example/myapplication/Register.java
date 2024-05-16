@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -99,6 +100,7 @@ public class Register extends AppCompatActivity {
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Toast.makeText(Register.this, "Account failed to create.", Toast.LENGTH_SHORT).show();
+                                        Log.w("log", "createUserWithEmail:failure", task.getException());
                                     }
                                 }
                             });
