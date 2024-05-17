@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -29,6 +30,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Map;
 
 public class MapsActivity extends Fragment implements OnMapReadyCallback {
 
@@ -43,8 +52,15 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
 
+    Map<String, Object> parkData;
+    private OnMarkerClickListener listener;
+
+    FirebaseFirestore db;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        db = FirebaseFirestore.getInstance();
+
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
 
         Log.d(TAG, "Initializing map fragment");
@@ -136,6 +152,17 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
                 .build();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            // Attach the listener to the host activity
+            listener = (OnMarkerClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnMarkerClickListener");
+        }
+    }
+
     @SuppressLint("MissingPermission")
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
@@ -146,7 +173,29 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
             createLocationRequest(); // set up the location tracking
         }
         changeMyLocationButtonPosition();
+
+        parkData = null;
+
+        // get park data when marker clicked
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker marker) {
+                // Retrieve the document ID from the marker's snippet
+                String parkId = marker.getSnippet(); // expecting doc hash, e.g 'a24MalBm5zYtMaSGrTbP', so marker must have this snippet
+                setParkData(parkId);
+                if (listener != null) {
+                    listener.updateUI(parkData);
+                }
+                return false;
+            }
+        });
     }
+
+    // Define an interface
+    public interface OnMarkerClickListener {
+        void updateUI(Map<String, Object> parkData);
+    }
+
     private void changeMyLocationButtonPosition() {
         // Get 'My Location' view
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
@@ -158,6 +207,29 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
 
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
         locationButton.setLayoutParams(layoutParams);
+    }
+
+    private void setParkData(String parkId) {
+        DocumentReference parkRef = db.collection("yourCollectionName").document(parkId);
+        parkRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot parkDataSnapshot = task.getResult();
+                    if (parkDataSnapshot.exists()) {
+                        // Document found
+                        parkData = parkDataSnapshot.getData();
+                        Log.d(TAG, "Document data: " + parkData);
+                    } else {
+                        // Document not found
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    // Task failed
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
     @SuppressLint("MissingPermission")

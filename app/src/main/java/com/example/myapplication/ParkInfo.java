@@ -102,8 +102,9 @@ public class ParkInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (loggedIn) {
-                    // Take user to AddReview
+                    // Take user to AddReview, passing current park
                     startActivity(new Intent(getApplicationContext(), AddReview.class));
+                            //.putExtra("parkDocument", ));
                 } else {
                     Toast.makeText(ParkInfo.this, "You must be logged in to leave a review!", Toast.LENGTH_SHORT).show();
                 }

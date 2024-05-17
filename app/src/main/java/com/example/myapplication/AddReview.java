@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class AddReview extends AppCompatActivity {
     Button btnGoBackMap;
+    TextView textParkName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +27,14 @@ public class AddReview extends AppCompatActivity {
             return insets;
         });
 
+        textParkName = findViewById(R.id.textParkName);
+
+        //get from intention
+        textParkName.setText("");
+
         btnGoBackMap = findViewById(R.id.btnGoBackMap);
+
+
 
         btnGoBackMap.setOnClickListener(new View.OnClickListener() {
             @Override
