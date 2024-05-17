@@ -6,12 +6,15 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import android.widget.RelativeLayout;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -29,7 +32,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class MapsActivity extends Fragment implements OnMapReadyCallback {
 
-    private static final String TAG = "MapFragment";
+    private static final String TAG = "TAG";
     private static final float SMALLEST_DISPLACEMENT = 0.5F;
     private static final String[] PERMISSIONS = {
             Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
@@ -41,8 +44,10 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
     private LocationRequest mLocationRequest;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_maps, container, false);
+
+        Log.d(TAG, "Initializing map fragment");
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
@@ -61,31 +66,30 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
                         double latitude = location.getLatitude();
                         double longitude = location.getLongitude();
                         LatLng latLng = new LatLng(latitude, longitude);
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                        if (mMap != null) {
+                            Log.d(TAG, "location result callback triggered");
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                        }
                     }
                 }
             }
         };
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.activity_maps, container, false);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        if (mapFragment == null) {
-            mapFragment = SupportMapFragment.newInstance();
-            getChildFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
         }
-        mapFragment.getMapAsync(this);
 
-        return rootView;
+        return view;
     }
 
     private boolean hasPermissions() {
         boolean permissionStatus = true;
         for (String permission : PERMISSIONS) {
-            if (ActivityCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "Permission is granted: " + permission);
+            } else {
+                Log.d(TAG, "Permission is not granted: " + permission);
                 permissionStatus = false;
             }
         }
@@ -93,25 +97,29 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
     }
 
     private void askPermissions() {
-        requestPermissions(PERMISSIONS, 1);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == 1) {
-            if (hasPermissions()) {
-                getLastLocation();
-                createLocationRequest();
-            } else {
-                Toast.makeText(requireContext(), "Permissions not granted", Toast.LENGTH_SHORT).show();
-            }
+        if (!hasPermissions()) {
+            Log.d(TAG, "Launching multiple contract permission launcher for ALL required permissions");
+            multiplePermissionActivityResultLauncher.launch(PERMISSIONS);
+        } else {
+            Log.d(TAG, "All permissions are already granted");
         }
     }
+
+    //Result launcher for permissions
+    private final ActivityResultLauncher<String[]> multiplePermissionActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGranted -> {
+        Log.d(TAG, "Launcher result: " + isGranted.toString());
+        getLastLocation(); //get start location
+        createLocationRequest(); // set up the location tracking
+        if (isGranted.containsValue(false)) {
+            Log.d(TAG, "At least one of the permissions was not granted, please enable permissions to ensure app functionality");
+        }
+    });
 
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
         mFusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
             if (location != null) {
+                Log.d(TAG, "Last Location detected " + location.getLatitude() + " " + location.getLongitude());
                 LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 19));
                 createLocationRequest();
@@ -129,16 +137,16 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
     }
 
     @SuppressLint("MissingPermission")
-    @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        if (hasPermissions()) {
+        Log.d(TAG, "Map ready");
+        if (!mFusedLocationClient.getLastLocation().isSuccessful()) {
+            Log.d(TAG, "Setting up location tracking");
             mMap.setMyLocationEnabled(true);
-            getLastLocation();
-            changeMyLocationButtonPosition();
+            createLocationRequest(); // set up the location tracking
         }
+        changeMyLocationButtonPosition();
     }
-
     private void changeMyLocationButtonPosition() {
         // Get 'My Location' view
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);

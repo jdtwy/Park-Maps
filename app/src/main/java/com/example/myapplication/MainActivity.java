@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "TAG";
     FirebaseFirestore db;
 
     // put in every activity which can send user to generate content (can make this a class that evey activity extends from in future)
@@ -97,13 +99,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (savedInstanceState == null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.map_container, new MapsActivity());
-            fragmentTransaction.commit();
-        }
+        loadMapsFragment();
     }
+
+    private void loadMapsFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        MapsActivity mapsFragment = new MapsActivity();
+        fragmentTransaction.replace(R.id.map_container, mapsFragment);
+        fragmentTransaction.commit();
+        Log.d(TAG, "load maps fragment has ran");
+    }
+
 
 
 }
