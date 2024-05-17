@@ -2,7 +2,6 @@ package com.example.myapplication;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -25,13 +23,11 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -50,10 +46,9 @@ public class AddPark extends AppCompatActivity {
     private double currentLat;
     private double currentLong;
     private FusedLocationProviderClient fusedLocationClient;
-    private LocationRequest locationRequest;
-    private boolean loggedIn = false;
     FirebaseFirestore db;
     FirebaseAuth mAuth;
+    private boolean loggedIn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,18 +96,21 @@ public class AddPark extends AppCompatActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String parkName = inputParkName.getText().toString();
-                if (parkName.isEmpty()) {
-                    Toast.makeText(AddPark.this, "Fields cannot be left empty, park was not created", Toast.LENGTH_LONG).show();
-                } else {
-                    String latitude = String.valueOf(inputLat.getText());
-                    String longitude = String.valueOf(inputLong.getText());
-                    if (latitude.isEmpty() || longitude.isEmpty()) {
-                        Toast.makeText(AddPark.this, "Park was not created, try pressing Get Position to fill out latitude and longitude fields", Toast.LENGTH_LONG).show();
+                if (loggedIn) {
+                    String parkName = inputParkName.getText().toString();
+                    if (parkName.isEmpty()) {
+                        Toast.makeText(AddPark.this, "Park was not created, every park needs a name", Toast.LENGTH_LONG).show();
                     } else {
-                        addPark(parkName, latitude, longitude);
+                        String latitude = String.valueOf(inputLat.getText());
+                        String longitude = String.valueOf(inputLong.getText());
+                        if (latitude.isEmpty() || longitude.isEmpty()) {
+                            Toast.makeText(AddPark.this, "Park was not created, try pressing Get Position to fill out latitude and longitude fields", Toast.LENGTH_LONG).show();
+                        } else {
+                            addPark(parkName, latitude, longitude);
+                        }
                     }
+                } else {
+                    Toast.makeText(AddPark.this, "Park was not created, try logging in first!", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -203,7 +201,7 @@ public class AddPark extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     private void requestLocationUpdates() {
-        locationRequest = new LocationRequest.Builder(500)
+        LocationRequest locationRequest = new LocationRequest.Builder(500)
                 .setMinUpdateDistanceMeters(SMALLEST_DISPLACEMENT)
                 .build();
 
