@@ -8,9 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,10 +20,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.api.Distribution;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
     Button btnGoReviews;
     TextView textParkName;
     TextView textAverageReviewRating;
+    LinearLayout layoutReviews;
 
     Map<Object, String> parkData = null;
 
@@ -66,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
         btnGoReviews = findViewById(R.id.btnGoReviews);
         textParkName = findViewById(R.id.textParkName);
         textAverageReviewRating = findViewById(R.id.textAverageReviewRating);
+        layoutReviews = findViewById(R.id.layoutReviews);
 
         // enable 'logged-in'-user features
         if (mAuth.getCurrentUser() != null) {
@@ -128,23 +135,39 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
         Log.d(TAG, "load maps fragment has ran");
     }
 
+    public interface FirestoreCallbackFloat {
+        void onCallback(List<Float> data);
+    }
+
     @Override
     public void updateUI(Map<String, Object> parkData) {
-        Log.d("MainActivity", "updateUI called with parkId: " + parkData);
-
-        // load data from reviews collection
+        // load collection references
         CollectionReference reviewsCollectionRef = db.collection("reviews");
+        CollectionReference usersCollectionRef = db.collection("users");
 
         // get/set park name
         String parkName = (String) parkData.get("name");
         textParkName.setText(parkName);
 
+        // get/set average review rating
+        dbFetchAverageRatings(parkData, reviewsCollectionRef, new FirestoreCallbackFloat() {
+            @Override
+            public void onCallback(List<Float> data) {
+                float average = calculateAverage(data);
+                String ratingString = getRatingString(average);
+
+                textAverageReviewRating.setText(reviewRatingString);
+            }
+        });
+    }
+
+    public <T> void dbFetchAverageRatings(Map<String, Object> parkData, CollectionReference collectionRef, FirestoreCallback<T> callback) {
         // get/set average rating
         ArrayList<String> parkReviewsHashes = (ArrayList<String>) parkData.get("parkReviews");
 
         List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
         for (String hash : parkReviewsHashes) {
-            Task<DocumentSnapshot> task = reviewsCollectionRef.document(hash).get();
+            Task<DocumentSnapshot> task = collectionRef.document(hash).get();
             tasks.add(task);
         }
 
@@ -159,21 +182,9 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
                         }
                     }
 
-                    float averageRating = calculateAverage(ratings);
-
-                    String reviewRatingString = getRatingString(averageRating);
-
-                    textAverageReviewRating.setText(reviewRatingString);
-
-                    // TODO: JAMES/OWEN: START WORKING FROM HERE I GUESS
-                    // PURPOSE OF THIS FUNCTION IS TO UPDATE ALL THE UI. CURRENTLY ONLY UPDATED REVIEW RATING AND PARK NAME
-                    // TODO: UPDATE FEATURES UI ELEMENT AND REVIEWS UI ELEMENT, DEFINED IN linear_layout_review.xml and linear_layout_feature.xml
-                    // FEEL FREE TO CHANGE THESE IF THEY SUCK
-                })
-                .addOnFailureListener(e -> {
-                    // Handle any errors
+                    // send back data
+                    callback.onCallback((List<T>) ratings);
                 });
-    }
 
     private float calculateAverage(List<Float> ratings) {
         float sum = 0;
@@ -183,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
         return sum / ratings.size();
     }
 
-    private String getRatingString(float ratingString) {
+    private String getRatingString(float rating) {
         final int TOTAL_STARS = 5;
 
         // get rating string, e.g "3.4 ★★★☆☆"

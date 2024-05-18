@@ -6,7 +6,7 @@
     android:layout_height="0dp"
     android:layout_weight="4"
     android:orientation="vertical"
-    android:visibility="invisible"> <!--SET TO INVISIBLE WHEN DONE CONFIGURING-->
+    android:visibility="visible"> <!--SET TO INVISIBLE WHEN DONE CONFIGURING-->
 
     <LinearLayout
         android:layout_width="match_parent"
