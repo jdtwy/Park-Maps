@@ -62,6 +62,7 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
 
     Map<String, Object> parkData;
     private OnMarkerClickListener listener;
+    private LatLng position;
 
     FirebaseFirestore db;
 
@@ -73,13 +74,21 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
 
         Log.d(TAG, "Initializing map fragment");
 
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey("position")) {
+            position = bundle.getParcelable("position");
+            Log.d(TAG, "position parsed");
+        }
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
-        if (hasPermissions()) {
-            getLastLocation();
-            createLocationRequest();
-        } else {
-            askPermissions();
+        if (position == null) {
+            if (hasPermissions()) {
+                getLastLocation();
+                createLocationRequest();
+            } else {
+                askPermissions();
+            }
         }
 
         mLocationCallback = new LocationCallback() {
@@ -145,7 +154,9 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
             if (location != null) {
                 Log.d(TAG, "Last Location detected " + location.getLatitude() + " " + location.getLongitude());
                 LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 19));
+                if (mMap != null) {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 19));
+                }
                 createLocationRequest();
             } else {
                 Toast.makeText(requireContext(), "No location detected", Toast.LENGTH_SHORT).show();
@@ -172,9 +183,26 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
         Log.d(TAG, "Map ready");
 
         if (!mFusedLocationClient.getLastLocation().isSuccessful()) {
-            Log.d(TAG, "Setting up location tracking");
-            mMap.setMyLocationEnabled(true);
-            createLocationRequest(); // set up the location tracking
+            if (position != null) {
+                stopLocationUpdates();
+                Log.d(TAG, "location updates stopped" + position.toString());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 19));
+                mMap.setMyLocationEnabled(true);
+                SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+                View mapView = mapFragment.getView();
+                View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+                locationButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        createLocationRequest();
+                        startLocationUpdates();
+                        mMap.setMyLocationEnabled(true);
+                    }
+                });
+            } else {
+                createLocationRequest(); // set up the location tracking
+                Log.d(TAG, "Setting up location tracking");
+            }
         }
         changeMyLocationButtonPosition();
 

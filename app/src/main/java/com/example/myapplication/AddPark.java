@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AddPark extends AppCompatActivity {
-    private static final String TAG = "TAG";
+    private static final String TAG = "DEBUG";
     private static final float SMALLEST_DISPLACEMENT = 0.5F;
     Button btnGoBackMap;
     Button btnGetLatLong;
