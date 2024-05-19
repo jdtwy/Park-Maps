@@ -36,6 +36,7 @@ public class ParkInfo extends AppCompatActivity {
     Button btnGoBackMap;
     Button btnGoAddReview;
     TextView textParkName;
+    TextView textParkCoords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class ParkInfo extends AppCompatActivity {
         btnGoBackMap = findViewById(R.id.btnGoBackMap);
         btnGoAddReview = findViewById(R.id.btnGoAddReview);
         textParkName = findViewById(R.id.textParkName);
+        textParkCoords = findViewById(R.id.textParkCoords);
 
         // enable 'logged-in'-user features
         if (mAuth.getCurrentUser() != null) {
@@ -76,8 +78,12 @@ public class ParkInfo extends AppCompatActivity {
         }
 
         String parkName = getParkName(parkData);
-
         textParkName.setText(parkName);
+
+        /*
+        String coordString = getParkCoords(parkData);
+        textParkCoords.setText(coordString);
+        */
 
         // choose starting info view
         if (mode.equals("info")) {
@@ -124,9 +130,38 @@ public class ParkInfo extends AppCompatActivity {
         });
     }
 
-    private String getParkName() {
+    private String getParkName(String parkData) {
+        String startMarker = "parkName=";
+        String endMarker = ",";
 
+        int startIndex = parkData.indexOf(startMarker) + startMarker.length();
+
+        int endIndex = parkData.indexOf(endMarker, startIndex);
+
+        String parkName = parkData.substring(startIndex, endIndex).trim();
 
         return parkName;
+    }
+
+    private String getParkCoords(String parkData) {
+        String startMarker = "latitude=";
+        String endMarker = ",";
+
+        int startIndex = parkData.indexOf(startMarker) + startMarker.length();
+
+        int endIndex = parkData.indexOf(endMarker, startIndex);
+
+        String parkCoords = parkData.substring(startIndex, endIndex).trim();
+
+        startMarker = "longitude=";
+        endMarker = ",";
+
+        startIndex = parkData.indexOf(startMarker) + startMarker.length();
+
+        endIndex = parkData.indexOf(endMarker, startIndex);
+
+        parkCoords += parkData.substring(startIndex, endIndex).trim();
+
+        return parkCoords;
     }
 }
