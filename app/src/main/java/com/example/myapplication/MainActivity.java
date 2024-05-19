@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
     // put in every activity which can send user to generate content (can make this a class that evey activity extends from in future)
     FirebaseAuth mAuth;
     boolean loggedIn = false;
+    private LatLng searchedPos = null;
 
     Button btnGoAuth;
     Button btnGoAddPark;
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
     TextView textAverageReviewRating;
     LinearLayout layoutReviews;
     LinearLayout parkInfoContainer;
+    EditText inputGoSearch;
 
     Map<String, Object> parkDataGlobal = null;
 
@@ -75,6 +79,22 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
         textAverageReviewRating = findViewById(R.id.textAverageReviewRating);
         layoutReviews = findViewById(R.id.layoutReviews);
         parkInfoContainer = findViewById(R.id.parkInfoContainer);
+        inputGoSearch = findViewById(R.id.inputGoSearch);
+
+        //if came from search activity, set these variables
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("latitude") && intent.hasExtra("longitude")) {
+            String latitude = intent.getStringExtra("latitude");
+            String longitude = intent.getStringExtra("longitude");
+
+            float fltLatitude = Float.parseFloat((String) latitude);
+            float fltLongitude = Float.parseFloat((String) longitude);
+
+            searchedPos = new LatLng(fltLatitude, fltLongitude);
+            if (searchedPos != null) {
+                Log.d(TAG, searchedPos.toString() + "search has been found in the intent");
+            }
+        }
 
         // enable 'logged-in'-user features
         if (mAuth.getCurrentUser() != null) {
@@ -126,13 +146,31 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
             }
         });
 
-        loadMapsFragment();
+        inputGoSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), Search.class));
+            }
+        });
+
+
+
+        loadMapsFragment(searchedPos);
     }
 
-    private void loadMapsFragment() {
+    private void loadMapsFragment(LatLng position) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         MapsActivity mapsFragment = new MapsActivity();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("position", position);
+        mapsFragment.setArguments(bundle);
+
+        if (position != null) {
+            Log.d(TAG, position.toString() + "position parsed");
+        }
+
         fragmentTransaction.replace(R.id.map_container, mapsFragment);
         fragmentTransaction.commit();
         Log.d(TAG, "load maps fragment has ran");
