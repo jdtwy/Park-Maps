@@ -132,7 +132,7 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
     //Result launcher for permissions
     private final ActivityResultLauncher<String[]> multiplePermissionActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGranted -> {
         Log.d(TAG, "Launcher result: " + isGranted.toString());
-        getLastLocation(); //get start location
+        getLastLocation(); // get start location
         createLocationRequest(); // set up the location tracking
         if (isGranted.containsValue(false)) {
             Log.d(TAG, "At least one of the permissions was not granted, please enable permissions to ensure app functionality");
@@ -170,6 +170,7 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         Log.d(TAG, "Map ready");
+
         if (!mFusedLocationClient.getLastLocation().isSuccessful()) {
             Log.d(TAG, "Setting up location tracking");
             mMap.setMyLocationEnabled(true);
@@ -185,7 +186,6 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
-                // Retrieve the document ID from the marker's snippet
                 String parkId = marker.getSnippet(); // expecting doc hash, e.g 'a24MalBm5zYtMaSGrTbP', so marker must have this snippet
                 setParkData(parkId);
 
@@ -204,8 +204,6 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
             }
         });
     }
-
-
 
     private void populateMarkers(GoogleMap googleMap) {
         final Executor executor = Executors.newSingleThreadExecutor();
@@ -274,7 +272,6 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
                     DocumentSnapshot parkDataSnapshot = task.getResult();
                     Log.d(TAG, parkDataSnapshot.toString());
                     if (parkDataSnapshot.exists()) {
-                        // Document found
                         parkData = parkDataSnapshot.getData();
                         Log.d(TAG, "Document data: " + parkData);
 
@@ -282,12 +279,10 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
                             listener.updateUI(parkData);
                         }
                     } else {
-                        // Document not found
                         Log.d(TAG, "No such document in setParkData");
                     }
                 } else {
-                    // Task failed
-                    Log.d(TAG, "get failed with ", task.getException());
+                    Log.d(TAG, "Document get failed with ", task.getException());
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {

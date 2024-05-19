@@ -2,9 +2,11 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -24,6 +26,8 @@ public class ParkInfo extends AppCompatActivity {
     FirebaseAuth mAuth;
     boolean loggedIn = false;
     String mode;
+    String parkData;
+    String TAG = "DEBUG";
 
     LinearLayout linearLayoutInfo;
     RecyclerView recyclerViewReviews;
@@ -31,6 +35,7 @@ public class ParkInfo extends AppCompatActivity {
     Button btnShowReviews;
     Button btnGoBackMap;
     Button btnGoAddReview;
+    TextView textParkName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,7 @@ public class ParkInfo extends AppCompatActivity {
         btnShowReviews = findViewById(R.id.btnShowReviews);
         btnGoBackMap = findViewById(R.id.btnGoBackMap);
         btnGoAddReview = findViewById(R.id.btnGoAddReview);
+        textParkName = findViewById(R.id.textParkName);
 
         // enable 'logged-in'-user features
         if (mAuth.getCurrentUser() != null) {
@@ -62,10 +68,16 @@ public class ParkInfo extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             mode = intent.getStringExtra("mode");
+            parkData = intent.getStringExtra("parkData"); // e.g "{parkReviews=[], parkName=Morrissey's Park, latitude=-37.7578521, longitude=144.9867919}"
+
             if (mode == null) {
                 mode = "info";
             }
         }
+
+        String parkName = getParkName(parkData);
+
+        textParkName.setText(parkName);
 
         // choose starting info view
         if (mode.equals("info")) {
@@ -110,5 +122,11 @@ public class ParkInfo extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private String getParkName() {
+
+
+        return parkName;
     }
 }

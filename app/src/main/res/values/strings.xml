@@ -3,7 +3,7 @@
     <string name="app_name">ParkTech App</string>
     <string name="btnGoBackMap">⬅️</string>
     <string name="inputGoSearch">Search here</string>
-    <string name="textReviewRatingPlaceholder">3.4 ★★★☆☆</string>
+    <string name="textReviewRatingPlaceholder">No reviews</string>
     <string name="textParkCoordsPlaceholder">-37.818078, 144.96681</string>
     <string name="textFeatures">Features</string>
     <string name="textParkNamePlaceholder">Placeholder Park</string>

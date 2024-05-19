@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
     LinearLayout layoutReviews;
     LinearLayout parkInfoContainer;
 
-    Map<Object, String> parkData = null;
+    Map<String, Object> parkDataGlobal = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
         }
 
         if (loggedIn) {
-            btnGoAuth.setVisibility(View.VISIBLE);
+            btnGoAuth.setVisibility(View.INVISIBLE);
         }
 
         btnGoAuth.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
                 // Take user to ParkInfo and set mode to Info
                 startActivity((new Intent(getApplicationContext(), ParkInfo.class)
                         .putExtra("mode", "info")
+                        .putExtra("parkData", parkDataGlobal.toString())
                 ));
             }
         });
@@ -139,6 +140,8 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
 
     @Override
     public void updateUI(Map<String, Object> parkData) {
+        parkDataGlobal = parkData;
+
         if (parkData.isEmpty()) {
             // in-case hideUIPayload
             parkInfoContainer.setVisibility(View.GONE);
@@ -147,11 +150,8 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
             CollectionReference reviewsCollectionRef = db.collection("reviews");
             CollectionReference usersCollectionRef = db.collection("users");
 
-            Log.d(TAG, "" + parkData.toString());
-
             // get/set park name
             String parkName = (String) parkData.get("parkName");
-            Log.d(TAG, parkName);
             textParkName.setText(parkName);
 
             // get/set average review rating
