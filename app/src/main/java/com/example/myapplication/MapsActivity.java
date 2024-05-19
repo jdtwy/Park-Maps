@@ -272,7 +272,9 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
                     DocumentSnapshot parkDataSnapshot = task.getResult();
                     Log.d(TAG, parkDataSnapshot.toString());
                     if (parkDataSnapshot.exists()) {
+                        String parkHash = parkDataSnapshot.getId();
                         parkData = parkDataSnapshot.getData();
+                        parkData.put("hash", parkHash);
                         Log.d(TAG, "Document data: " + parkData);
 
                         if (listener != null) {

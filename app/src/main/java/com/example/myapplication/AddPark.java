@@ -70,7 +70,6 @@ public class AddPark extends AppCompatActivity {
             loggedIn = true;
         }
 
-
         btnGoBackMap = findViewById(R.id.btnGoBackMap);
         btnConfirm = findViewById(R.id.btnCreatePark);
         btnGetLatLong = findViewById(R.id.getLatLong);

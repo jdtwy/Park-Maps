@@ -67,10 +67,11 @@ public class ParkInfo extends AppCompatActivity {
         }
 
         // set mode for activity
+        // get parkData from previous activity
         Intent intent = getIntent();
         if (intent != null) {
             mode = intent.getStringExtra("mode");
-            parkData = intent.getStringExtra("parkData"); // e.g "{parkReviews=[], parkName=Morrissey's Park, latitude=-37.7578521, longitude=144.9867919}"
+            parkData = intent.getStringExtra("parkData");
 
             if (mode == null) {
                 mode = "info";
@@ -80,10 +81,8 @@ public class ParkInfo extends AppCompatActivity {
         String parkName = getParkName(parkData);
         textParkName.setText(parkName);
 
-        /*
         String coordString = getParkCoords(parkData);
         textParkCoords.setText(coordString);
-        */
 
         // choose starting info view
         if (mode.equals("info")) {
@@ -121,8 +120,8 @@ public class ParkInfo extends AppCompatActivity {
             public void onClick(View v) {
                 if (loggedIn) {
                     // Take user to AddReview, passing current park
-                    startActivity(new Intent(getApplicationContext(), AddReview.class));
-                            //.putExtra("parkDocument", ));
+                    startActivity((new Intent(getApplicationContext(), AddReview.class))
+                            .putExtra("parkData", parkData));
                 } else {
                     Toast.makeText(ParkInfo.this, "You must be logged in to leave a review!", Toast.LENGTH_SHORT).show();
                 }
@@ -153,8 +152,10 @@ public class ParkInfo extends AppCompatActivity {
 
         String parkCoords = parkData.substring(startIndex, endIndex).trim();
 
+        parkCoords += ", ";
+
         startMarker = "longitude=";
-        endMarker = ",";
+        endMarker = "}";
 
         startIndex = parkData.indexOf(startMarker) + startMarker.length();
 

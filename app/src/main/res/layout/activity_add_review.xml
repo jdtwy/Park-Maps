@@ -229,7 +229,7 @@
                         android:layout_weight="3" />
 
                     <Button
-                        android:id="@+id/btnCreatePark"
+                        android:id="@+id/btnCreateReview"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
