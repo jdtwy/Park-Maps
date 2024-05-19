@@ -150,7 +150,7 @@ public class AddPark extends AppCompatActivity {
                     // add fields to the document
                     userDocument.put("parkName", parkName);
                     userDocument.put("latitude", latitude);
-                    userDocument.put("Longitude", longitude);
+                    userDocument.put("longitude", longitude);
                     userDocument.put("parkReviews", new ArrayList<>());
 
                     db.collection("parks").add(userDocument);

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,13 +32,18 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class MapsActivity extends Fragment implements OnMapReadyCallback {
 
@@ -176,6 +182,8 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
 
         parkData = null;
 
+        populateMarkers(googleMap);
+
         // get park data when marker clicked
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -187,6 +195,42 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
                     listener.updateUI(parkData);
                 }
                 return false;
+            }
+        });
+    }
+
+    private void populateMarkers(GoogleMap googleMap) {
+        final Executor executor = Executors.newSingleThreadExecutor();
+        final Handler mainHandler = new Handler(Looper.getMainLooper());
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                db.collection("parks")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Map<String, Object> map = document.getData();
+                                        String parkName = (String) map.get("parkName");
+                                        float latitude = Float.parseFloat((String) map.get("latitude"));
+                                        float longitude = Float.parseFloat((String) map.get("longitude"));
+                                        LatLng pos = new LatLng(latitude, longitude);
+
+                                        // Update UI on the main thread
+                                        mainHandler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                googleMap.addMarker(new MarkerOptions()
+                                                        .position(pos)
+                                                        .title(parkName));
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
             }
         });
     }
