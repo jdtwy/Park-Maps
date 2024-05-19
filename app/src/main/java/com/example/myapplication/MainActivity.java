@@ -135,10 +135,6 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
         Log.d(TAG, "load maps fragment has ran");
     }
 
-    public interface FirestoreCallbackFloat {
-        void onCallback(List<Float> data);
-    }
-
     @Override
     public void updateUI(Map<String, Object> parkData) {
         // load collection references
@@ -150,59 +146,119 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
         textParkName.setText(parkName);
 
         // get/set average review rating
-        dbFetchAverageRatings(parkData, reviewsCollectionRef, new FirestoreCallbackFloat() {
-            @Override
-            public void onCallback(List<Float> data) {
-                float average = calculateAverage(data);
-                String ratingString = getRatingString(average);
-
-                textAverageReviewRating.setText(reviewRatingString);
-            }
-        });
-    }
-
-    public <T> void dbFetchAverageRatings(Map<String, Object> parkData, CollectionReference collectionRef, FirestoreCallback<T> callback) {
-        // get/set average rating
         ArrayList<String> parkReviewsHashes = (ArrayList<String>) parkData.get("parkReviews");
 
         List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
         for (String hash : parkReviewsHashes) {
-            Task<DocumentSnapshot> task = collectionRef.document(hash).get();
+            Task<DocumentSnapshot> task = reviewsCollectionRef.document(hash).get();
             tasks.add(task);
         }
 
         Tasks.whenAllSuccess(tasks)
                 .addOnSuccessListener(taskResults -> {
-                    List<Float> ratings = new ArrayList<>();
+                    List<DocumentSnapshot> documents = new ArrayList<>();
                     for (Object result : taskResults) {
                         DocumentSnapshot document = (DocumentSnapshot) result;
+                        documents.add(document);
+                    }
+
+                    List<Float> ratings = new ArrayList<>();
+                    for (DocumentSnapshot document : documents) {
                         Double rating = document.getDouble("rating");
                         if (rating != null) {
                             ratings.add(rating.floatValue());
                         }
                     }
 
-                    // send back data
-                    callback.onCallback((List<T>) ratings);
-                });
+                    float averageRating = average(ratings);
 
-    private float calculateAverage(List<Float> ratings) {
+                    String reviewRatingString = getRatingString(averageRating);
+
+                    textAverageReviewRating.setText(reviewRatingString);
+
+                    // get/set park review modules
+                    for (int idx = 0; idx < layoutReviews.getChildCount(); idx++) {
+                        // get document
+                        DocumentSnapshot reviewSnapshot = documents.get(idx);
+
+                        // select reviewModule
+                        View reviewModule = layoutReviews.getChildAt(idx);
+
+                        // get/set review rating
+                        float rating = reviewSnapshot.getDouble("rating").floatValue();
+
+                        String ratingString = getRatingString(rating);
+
+                        TextView textReviewRating = reviewModule.findViewById(R.id.textReviewRating);
+                        textReviewRating.setText(ratingString);
+
+                        // get/set review text
+                        String reviewText = reviewSnapshot.getString("review");
+
+                        TextView textReview = reviewModule.findViewById(R.id.textReview);
+                        textReview.setText(reviewText);
+
+                        // get/set features string
+                        ArrayList<String> features = (ArrayList<String>) reviewSnapshot.get("features");
+
+                        String featuresString = "";
+
+                        for (String feature : features) {
+                            featuresString += feature;
+                        }
+
+                        TextView textReviewSymbols = reviewModule.findViewById(R.id.textReviewSymbols);
+                        textReviewSymbols.setText(featuresString);
+
+                        // get/set review leaver name
+                        String userHash = reviewSnapshot.getString("user");
+
+                        usersCollectionRef.document(userHash)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document = task.getResult();
+                                            if (document.exists()) {
+                                                String username = document.getString("username");
+
+                                                TextView textReviewUsername = reviewModule.findViewById(R.id.textReviewUsername);
+                                                textReviewUsername.setText(username);
+                                            } else {
+                                                Log.d("Firestore", "No such document");
+                                            }
+                                        } else {
+                                            Log.d("Firestore", "get failed with ", task.getException());
+                                        }
+                                    }
+                                });
+                    }
+
+                    // TODO: implement get/set park features modules
+                })
+                .addOnFailureListener(e -> {
+                    // Handle any errors
+                });
+    }
+
+    private float average(List<Float> nums) {
         float sum = 0;
-        for (Float rating : ratings) {
-            sum += rating;
+        for (Float num : nums) {
+            sum += num;
         }
-        return sum / ratings.size();
+        return sum / nums.size();
     }
 
     private String getRatingString(float rating) {
         final int TOTAL_STARS = 5;
 
         // get rating string, e.g "3.4 ★★★☆☆"
-        int numFullStars = (int) floor(ratingString);
+        int numFullStars = (int) floor(rating);
         int numEmptyStars = TOTAL_STARS - numFullStars;
 
         String reviewRatingString = "";
-        reviewRatingString += String.format("%.1f", ratingString) + " ";
+        reviewRatingString += String.format("%.1f", rating) + " ";
 
         for (int idx = 1; idx <= numFullStars; idx++) {
             reviewRatingString += "★";
