@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements MapsActivity.OnMarkerClickListener {
-    private static final String TAG = "TAG";
+    private static final String TAG = "DEBUG";
     FirebaseFirestore db;
 
     // put in every activity which can send user to generate content (can make this a class that evey activity extends from in future)
@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
     TextView textParkName;
     TextView textAverageReviewRating;
     LinearLayout layoutReviews;
+    LinearLayout parkInfoContainer;
 
     Map<Object, String> parkData = null;
 
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
         textParkName = findViewById(R.id.textParkName);
         textAverageReviewRating = findViewById(R.id.textAverageReviewRating);
         layoutReviews = findViewById(R.id.layoutReviews);
+        parkInfoContainer = findViewById(R.id.parkInfoContainer);
 
         // enable 'logged-in'-user features
         if (mAuth.getCurrentUser() != null) {
@@ -137,109 +139,118 @@ public class MainActivity extends AppCompatActivity implements MapsActivity.OnMa
 
     @Override
     public void updateUI(Map<String, Object> parkData) {
-        // load collection references
-        CollectionReference reviewsCollectionRef = db.collection("reviews");
-        CollectionReference usersCollectionRef = db.collection("users");
+        if (parkData.isEmpty()) {
+            // in-case hideUIPayload
+            parkInfoContainer.setVisibility(View.GONE);
+        } else {
+            // load collection references
+            CollectionReference reviewsCollectionRef = db.collection("reviews");
+            CollectionReference usersCollectionRef = db.collection("users");
 
-        // get/set park name
-        String parkName = (String) parkData.get("name");
-        textParkName.setText(parkName);
+            Log.d(TAG, "" + parkData.toString());
 
-        // get/set average review rating
-        ArrayList<String> parkReviewsHashes = (ArrayList<String>) parkData.get("parkReviews");
+            // get/set park name
+            String parkName = (String) parkData.get("parkName");
+            Log.d(TAG, parkName);
+            textParkName.setText(parkName);
 
-        List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
-        for (String hash : parkReviewsHashes) {
-            Task<DocumentSnapshot> task = reviewsCollectionRef.document(hash).get();
-            tasks.add(task);
-        }
+            // get/set average review rating
+            ArrayList<String> parkReviewsHashes = (ArrayList<String>) parkData.get("parkReviews");
 
-        Tasks.whenAllSuccess(tasks)
-                .addOnSuccessListener(taskResults -> {
-                    List<DocumentSnapshot> documents = new ArrayList<>();
-                    for (Object result : taskResults) {
-                        DocumentSnapshot document = (DocumentSnapshot) result;
-                        documents.add(document);
-                    }
+            if (!parkReviewsHashes.isEmpty()) {
+                List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
+                for (String hash : parkReviewsHashes) {
+                    Task<DocumentSnapshot> task = reviewsCollectionRef.document(hash).get();
+                    tasks.add(task);
+                }
 
-                    List<Float> ratings = new ArrayList<>();
-                    for (DocumentSnapshot document : documents) {
-                        Double rating = document.getDouble("rating");
-                        if (rating != null) {
-                            ratings.add(rating.floatValue());
-                        }
-                    }
+                Tasks.whenAllSuccess(tasks)
+                        .addOnSuccessListener(taskResults -> {
+                            List<DocumentSnapshot> documents = new ArrayList<>();
+                            for (Object result : taskResults) {
+                                DocumentSnapshot document = (DocumentSnapshot) result;
+                                documents.add(document);
+                            }
 
-                    float averageRating = average(ratings);
+                            List<Float> ratings = new ArrayList<>();
+                            for (DocumentSnapshot document : documents) {
+                                Double rating = document.getDouble("rating");
+                                if (rating != null) {
+                                    ratings.add(rating.floatValue());
+                                }
+                            }
 
-                    String reviewRatingString = getRatingString(averageRating);
+                            float averageRating = average(ratings);
 
-                    textAverageReviewRating.setText(reviewRatingString);
+                            String reviewRatingString = getRatingString(averageRating);
 
-                    // get/set park review modules
-                    for (int idx = 0; idx < layoutReviews.getChildCount(); idx++) {
-                        // get document
-                        DocumentSnapshot reviewSnapshot = documents.get(idx);
+                            textAverageReviewRating.setText(reviewRatingString);
 
-                        // select reviewModule
-                        View reviewModule = layoutReviews.getChildAt(idx);
+                            // get/set park review modules
+                            for (int idx = 0; idx < layoutReviews.getChildCount(); idx++) {
+                                // get document
+                                DocumentSnapshot reviewSnapshot = documents.get(idx);
 
-                        // get/set review rating
-                        float rating = reviewSnapshot.getDouble("rating").floatValue();
+                                // select reviewModule
+                                View reviewModule = layoutReviews.getChildAt(idx);
 
-                        String ratingString = getRatingString(rating);
+                                // get/set review rating
+                                float rating = reviewSnapshot.getDouble("rating").floatValue();
 
-                        TextView textReviewRating = reviewModule.findViewById(R.id.textReviewRating);
-                        textReviewRating.setText(ratingString);
+                                String ratingString = getRatingString(rating);
 
-                        // get/set review text
-                        String reviewText = reviewSnapshot.getString("review");
+                                TextView textReviewRating = reviewModule.findViewById(R.id.textReviewRating);
+                                textReviewRating.setText(ratingString);
 
-                        TextView textReview = reviewModule.findViewById(R.id.textReview);
-                        textReview.setText(reviewText);
+                                // get/set review text
+                                String reviewText = reviewSnapshot.getString("review");
 
-                        // get/set features string
-                        ArrayList<String> features = (ArrayList<String>) reviewSnapshot.get("features");
+                                TextView textReview = reviewModule.findViewById(R.id.textReview);
+                                textReview.setText(reviewText);
 
-                        String featuresString = "";
+                                // get/set features string
+                                ArrayList<String> features = (ArrayList<String>) reviewSnapshot.get("features");
 
-                        for (String feature : features) {
-                            featuresString += feature;
-                        }
+                                String featuresString = "";
 
-                        TextView textReviewSymbols = reviewModule.findViewById(R.id.textReviewSymbols);
-                        textReviewSymbols.setText(featuresString);
+                                for (String feature : features) {
+                                    featuresString += feature;
+                                }
 
-                        // get/set review leaver name
-                        String userHash = reviewSnapshot.getString("user");
+                                TextView textReviewSymbols = reviewModule.findViewById(R.id.textReviewSymbols);
+                                textReviewSymbols.setText(featuresString);
 
-                        usersCollectionRef.document(userHash)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            DocumentSnapshot document = task.getResult();
-                                            if (document.exists()) {
-                                                String username = document.getString("username");
+                                // get/set review leaver name
+                                String userHash = reviewSnapshot.getString("user");
 
-                                                TextView textReviewUsername = reviewModule.findViewById(R.id.textReviewUsername);
-                                                textReviewUsername.setText(username);
-                                            } else {
-                                                Log.d("Firestore", "No such document");
+                                usersCollectionRef.document(userHash)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    DocumentSnapshot document = task.getResult();
+                                                    if (document.exists()) {
+                                                        String username = document.getString("username");
+
+                                                        TextView textReviewUsername = reviewModule.findViewById(R.id.textReviewUsername);
+                                                        textReviewUsername.setText(username);
+                                                    } else {
+                                                        Log.d(TAG, "No such document");
+                                                    }
+                                                } else {
+                                                    Log.d(TAG, "get failed with ", task.getException());
+                                                }
                                             }
-                                        } else {
-                                            Log.d("Firestore", "get failed with ", task.getException());
-                                        }
-                                    }
-                                });
-                    }
+                                        });
+                            }
 
-                    // TODO: implement get/set park features modules
-                })
-                .addOnFailureListener(e -> {
-                    // Handle any errors
-                });
+                            // TODO: implement get/set park features modules
+                        });
+            }
+
+            parkInfoContainer.setVisibility(View.VISIBLE);
+        }
     }
 
     private float average(List<Float> nums) {

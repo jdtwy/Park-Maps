@@ -23,11 +23,12 @@
                 android:layout_weight="4" />
 
             <LinearLayout
+                android:id="@+id/parkInfoContainer"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="3"
                 android:orientation="vertical"
-                android:visibility="visible"> <!--SET THIS TO GONE WHEN DONE CONFIGURING-->
+                android:visibility="gone"> <!--SET THIS TO GONE WHEN DONE CONFIGURING-->
                 <!--Make something turn visibility from 'gone' to 'visible'-->
 
                 <LinearLayout

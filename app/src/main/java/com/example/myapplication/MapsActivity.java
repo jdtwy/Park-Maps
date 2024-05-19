@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -41,13 +42,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class MapsActivity extends Fragment implements OnMapReadyCallback {
 
-    private static final String TAG = "TAG";
+    private static final String TAG = "DEBUG";
     private static final float SMALLEST_DISPLACEMENT = 0.5F;
     private static final String[] PERMISSIONS = {
             Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
@@ -161,12 +163,7 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try {
-            // Attach the listener to the host activity
-            listener = (OnMarkerClickListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement OnMarkerClickListener");
-        }
+        listener = (OnMarkerClickListener) context;
     }
 
     @SuppressLint("MissingPermission")
@@ -191,13 +188,24 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
                 // Retrieve the document ID from the marker's snippet
                 String parkId = marker.getSnippet(); // expecting doc hash, e.g 'a24MalBm5zYtMaSGrTbP', so marker must have this snippet
                 setParkData(parkId);
-                if (listener != null) {
-                    listener.updateUI(parkData);
-                }
+
                 return false;
             }
         });
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng latLng) {
+                Map<String, Object> hideUIPayload = new HashMap<>();
+
+                if (listener != null) {
+                    listener.updateUI(hideUIPayload);
+                }
+            }
+        });
     }
+
+
 
     private void populateMarkers(GoogleMap googleMap) {
         final Executor executor = Executors.newSingleThreadExecutor();
@@ -217,6 +225,7 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
                                         float latitude = Float.parseFloat((String) map.get("latitude"));
                                         float longitude = Float.parseFloat((String) map.get("longitude"));
                                         LatLng pos = new LatLng(latitude, longitude);
+                                        String parkHash = document.getId();
 
                                         // Update UI on the main thread
                                         mainHandler.post(new Runnable() {
@@ -224,7 +233,8 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
                                             public void run() {
                                                 googleMap.addMarker(new MarkerOptions()
                                                         .position(pos)
-                                                        .title(parkName));
+                                                        .title(parkName)
+                                                        .snippet(parkHash));
                                             }
                                         });
                                     }
@@ -254,24 +264,36 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
     }
 
     private void setParkData(String parkId) {
-        DocumentReference parkRef = db.collection("yourCollectionName").document(parkId);
+        Log.d(TAG, "Selected park hash: " + parkId);
+        DocumentReference parkRef = db.collection("parks").document(parkId);
+
         parkRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot parkDataSnapshot = task.getResult();
+                    Log.d(TAG, parkDataSnapshot.toString());
                     if (parkDataSnapshot.exists()) {
                         // Document found
                         parkData = parkDataSnapshot.getData();
                         Log.d(TAG, "Document data: " + parkData);
+
+                        if (listener != null) {
+                            listener.updateUI(parkData);
+                        }
                     } else {
                         // Document not found
-                        Log.d(TAG, "No such document");
+                        Log.d(TAG, "No such document in setParkData");
                     }
                 } else {
                     // Task failed
                     Log.d(TAG, "get failed with ", task.getException());
                 }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Failed to get park with hash: " + parkId);
             }
         });
     }
